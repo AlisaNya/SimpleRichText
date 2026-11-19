@@ -1,0 +1,30 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "SimpleRichText",
+	"Description": "SimpleRichTextBlock: RichTextBlock with a convenient per-segment editor (color, font, size) in the Details panel. Tags are generated automatically.",
+	"Category": "UnrealEssence",
+	"CreatedBy": "UnrealEssence",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "SimpleRichText",
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen"
+		},
+		{
+			"Name": "SimpleRichTextEditor",
+			"Type": "UncookedOnly",
+			"LoadingPhase": "Default"
+		}
+
+	]
+}
