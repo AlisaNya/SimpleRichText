@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/RichTextBlock.h"
+#include "Widgets/Text/SRichTextBlock.h"
 #include "SimpleRichTextBlock.generated.h"
 
 /** How the segments are entered in the Details panel. */

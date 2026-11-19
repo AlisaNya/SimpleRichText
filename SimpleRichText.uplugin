@@ -6,10 +6,10 @@
 	"Description": "SimpleRichTextBlock: RichTextBlock with a convenient per-segment editor (color, font, size) in the Details panel. Tags are generated automatically.",
 	"Category": "UnrealEssence",
 	"CreatedBy": "UnrealEssence",
-	"CreatedByURL": "",
-	"DocsURL": "",
+	"CreatedByURL": "https://t.me/YukiNoHime",
+	"DocsURL": "https://github.com/AlisaNya/SimpleRichText/blob/main/README.md",
 	"MarketplaceURL": "",
-	"SupportURL": "",
+	"SupportURL": "https://t.me/YukiNoHime",
 	"CanContainContent": false,
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
@@ -25,6 +25,5 @@
 			"Type": "UncookedOnly",
 			"LoadingPhase": "Default"
 		}
-
 	]
 }
