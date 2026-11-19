@@ -1,425 +1,137 @@
-SimpleRichText
+<div align="right">
+  <strong>ENG</strong> &nbsp;|&nbsp; <a href="README.ru.md">RU</a>
+</div>
 
-English | Русский
+<div align="center">
+  <img src="Resources/Icon128.png" alt="SimpleRichText icon" width="96">
+  <h1>SimpleRichText</h1>
+  <p>Format individual pieces of Unreal Engine UI text without writing rich text tags by hand.</p>
+  <p>
+    <img src="https://img.shields.io/badge/Unreal%20Engine-5.7-0E1128?logo=unrealengine&amp;logoColor=white" alt="Developed with Unreal Engine 5.7">
+    <img src="https://img.shields.io/badge/Blueprint-ready-2874A6" alt="Blueprint ready">
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
+  </p>
+</div>
 
-An Unreal Engine 5 plugin that adds SimpleRichTextBlock, a drop-in extension of the standard RichTextBlock.
+SimpleRichText adds **Simple Rich Text Block**, a `URichTextBlock` subclass with an editor for separately formatted text segments. Edit each segment's text and formatting in the Details panel; the plugin generates the markup and updates the standard Text property. The widget also exposes functions for changing segments in Blueprint and C++.
 
-It keeps everything RichTextBlock does (style sets, decorators, wrapping, SetText, ...) and adds a convenient segment editor to the Details panel: instead of typing tags by hand, you type text, pick a color (and optionally font, typeface and size) per segment, and the plugin writes the rich text markup into the regular Text field for you.
+## Features
 
-Developed and built against Unreal Engine 5.7. Other 5.x versions are untested; some engine API names used by the plugin (for example URichTextBlock::GetDefaultTextStyle) may differ between versions.
+- Set color, font, typeface, and size for each segment.
+- Enter text as individual segments or in one field separated into pieces.
+- Edit segments in the Details panel with a color picker, formatting menu, and insert/remove controls.
+- Use standard Rich Text Block features such as style sets, decorators, and wrapping.
+- Build and update text at runtime using Blueprint nodes or C++.
+- Optionally regenerate the Text property from segments when the widget loads or rebuilds.
 
-Features
-Subclass of URichTextBlock, so all standard functionality keeps working.
-The standard Text field stays visible and editable. Segments only write into it.
-Custom Details rows: [text][color][⚙ font / typeface / size][+][-] per segment.
-The + button inserts a new segment after the current one that inherits its color and formatting.
-Two input modes:
-Per Segment Fields: every segment has its own text field.
-Single Field + Separator: the whole text lives in one field, pieces are split by a separator and formats are applied by order.
-Per-segment color, font (UFont / UFontFace), typeface name and font size.
-A set of Blueprint / C++ functions for building and changing segments at runtime.
-Optional mode that always regenerates Text from the segments.
-Installation
-Copy the plugin folder into your project:
-YourProject/Plugins/SimpleRichText/
-Regenerate project files and build the project.
-Enable the plugin in Edit → Plugins → UI → Simple Rich Text if it is not enabled yet and restart the editor.
-Plugin layout
-SimpleRichText/
-  SimpleRichText.uplugin
-  Source/
-    SimpleRichText/                 (Runtime module)
-      SimpleRichText.Build.cs
-      Public/
-        SimpleRichTextModule.h
-        SimpleRichTextBlock.h
-        SimpleRichTextDecorator.h
-      Private/
-        SimpleRichTextModule.cpp
-        SimpleRichTextBlock.cpp
-        SimpleRichTextDecorator.cpp
-    SimpleRichTextEditor/           (Editor module)
-      SimpleRichTextEditor.Build.cs
-      Public/
-        SimpleRichTextEditorModule.h
-        SimpleRichTextBlockCustomization.h
-      Private/
-        SimpleRichTextEditorModule.cpp
-        SimpleRichTextBlockCustomization.cpp
-SimpleRichText (Runtime): USimpleRichTextBlock, the segment struct and the text decorator that understands the generated tag.
-SimpleRichTextEditor (Editor): the IDetailCustomization that builds the segment rows.
-Quick start
-Open a Widget Blueprint.
-In the palette, category Simple, drag Simple Rich Text Block into the hierarchy.
-In Details → Content click Add segment.
-Type text, pick a color. Click + on a row to add the next piece of text with the same color, then change the color there.
-The generated markup appears in the standard Text field, and the preview updates.
-Details panel
+## Requirements
 
-All controls are in the Content category.
+- Unreal Engine **5.7** was used for development and builds. Other UE 5 versions have not been tested and may require API adjustments.
+- A C++ build environment configured for your Unreal Engine installation.
 
-Property	Description
-Text	The standard RichTextBlock text field. Fully usable by hand.
-Text Segments	The segment editor (rows described below).
-Always Rebuild From Segments	Off (default): Text is only written when you edit segments. On: Text is regenerated from the segments on load and widget rebuild, so manual changes to Text are overwritten.
-Input Mode	Per Segment Fields or Single Field + Separator.
-Combined Text	(Single Field mode only) The whole text.
-Segment Separator	(Single Field mode only) String that separates pieces in Combined Text. Default `
-Segment row
-[ text field ] [ color ] [ ⚙ ] [ + ] [ - ]
-text field: the text of this segment (multi-line).
-color: color of this segment. New segments created with + copy the color of the segment they were created from.
-⚙: popup with
-Font: a UFont or UFontFace asset. Empty = default font of the block.
-Typeface: typeface name inside the font (for example Bold, Italic). Currently typed in by hand. Empty = default.
-Size: font size. 0 = default size.
-+: add a new segment after this one (inherits color and formatting, text is empty).
--: remove this segment.
-Input modes
-Per Segment Fields (default)
+## Installation
 
-Each segment has its own text field. Editing any segment rewrites Text with the generated markup.
+1. Copy or clone this repository into your project's `Plugins/SimpleRichText` directory. The `SimpleRichText.uplugin` file should be directly inside that folder.
+2. Regenerate your project files and build the project in your IDE or through Unreal Engine.
+3. Open the project, enable **SimpleRichText** in **Edit ? Plugins** if needed, and restart the editor when prompted.
 
-To avoid wiping a hand-written Text, nothing is written while the generated markup is empty (for example right after adding the first, still empty, segment).
 
-Single Field + Separator
+For C++ usage from another module, add `SimpleRichText` to that module's dependencies in its `.Build.cs` file and include `SimpleRichTextBlock.h`.
 
-Type the whole text into Combined Text and put the separator between the parts that should be formatted differently:
+## Quick start
 
+1. Open a Widget Blueprint and add **Simple Rich Text Block** from the **Simple** palette category.
+2. Select the widget and add an entry to **Text Segments** in the **Content** section of Details.
+3. Enter text and choose its color. Open the formatting menu to set a font, typeface, or size.
+4. Use **+** to insert another segment after a row, or **?** to remove it. An inserted row copies the source row's formatting.
+5. The generated markup appears in the standard **Text** property and the widget preview updates.
+
+## Editing text
+
+### Per Segment Fields
+
+This is the default input mode. Each row has its own multiline text field and formatting controls. Editing segments generates markup in **Text**. In the editor, adding an empty segment does not overwrite existing hand-written text when the generated markup is empty.
+
+### Single Field + Separator
+
+Set **Input Mode** to **Single Field + Separator** and enter all text in **Combined Text**. The default separator is `|`:
+
+```text
 Hello |beautiful |world|!
+```
 
-With the separator | this is split into four pieces. Piece N receives the format (color, font, typeface, size) of segment N. The segment rows then show only the color and the ⚙ popup next to a read-only preview of the piece (1: Hello, 2: beautiful, ...).
+The string is split into four pieces, including spaces. Piece *N* uses the format of segment *N*. The segment rows show a preview and formatting controls. Extra pieces copy the last existing format; removing pieces removes the trailing segments and their formats. Formats are matched by position, so inserting a separator in the middle shifts the formatting of subsequent pieces.
 
-Rules:
+When switching to this mode, existing segments are joined if Combined Text is empty. Choose a separator that does not occur in your text: occurrences are treated as boundaries. An empty separator treats the whole string as one piece.
 
-The number of segments always equals the number of pieces.
-If there are more pieces than segments, new segments copy the format of the last one.
-If there are fewer pieces than segments, the trailing segments (and their formats) are removed.
-Inserting a separator in the middle shifts formats by one piece, because formats are matched strictly by order.
-When you switch an existing block to this mode, the current segments are joined with the separator into Combined Text.
-After Combined Text, the separator or the mode changes, the Details panel rebuilds itself.
+### Details properties
 
-If your texts can contain the separator, choose a rarer one (for example || or ¦). A segment text that contains the separator will be split into two at the next split.
+| Property | Purpose |
+| --- | --- |
+| **Text** | Standard Rich Text Block text; can also be edited manually. Segment updates replace it with generated markup. |
+| **Text Segments** | Ordered list of text pieces and their formatting. |
+| **Always Rebuild From Segments** | Off by default. When enabled, regenerates Text during load, synchronization, and widget rebuild, overwriting manual Text changes. |
+| **Input Mode** | Selects per-segment fields or a single combined field. |
+| **Combined Text** | Text split into pieces in single-field mode. |
+| **Segment Separator** | Split string for single-field mode; defaults to `|`. |
 
-Generated markup
+Each `FSimpleRichTextSegment` contains `Text`, `Color` (white by default), an optional `Font` (`UFont` or `UFontFace`), an optional `Typeface` name, and `Size` (`0` uses the block's default size). An unset font or typeface uses the corresponding base style setting.
 
-Segments are converted into one tag per segment. The closing tag is the standard </>.
+## Generated markup
 
+Each nonempty segment becomes a `<seg>` run. For example:
+
+```xml
 <seg c="FF0000FF" f="/Game/Fonts/Roboto.Roboto" tf="Bold" s="32">Hello</>
-Attribute	Meaning
-c	Color as RRGGBBAA hex (sRGB). Always present.
-f	Soft object path of the font asset. Only if a font is set.
-tf	Typeface name. Only if set.
-s	Font size. Only if greater than 0.
+```
 
-Notes:
+| Attribute | Meaning |
+| --- | --- |
+| `c` | Color in sRGB `RRGGBBAA` hexadecimal form; always present. |
+| `f` | Soft object path to a font asset; omitted when unset. |
+| `tf` | Typeface name; omitted when unset. |
+| `s` | Font size; omitted when zero or less. |
 
-Segments with empty text are skipped.
-<, > and \ inside segment text are escaped with a backslash.
-The tag is handled by FSimpleRichTextDecorator, which is added automatically to the block. Starting from the default text style of the block, it overrides color, font, typeface and size.
-Because it is plain rich text markup, you can mix <seg> tags with your own style-set tags in the Text field.
-Segment struct: FSimpleRichTextSegment
-Field	Type	Description
-Text	FText	Text of the segment.
-Color	FLinearColor	Color. Default white.
-Font	TSoftObjectPtr<UObject>	UFont / UFontFace asset. Empty = default.
-Typeface	FName	Typeface inside the font. None = default.
-Size	int32	Font size. 0 = default.
-Blueprint / C++ API
+The plugin registers its decorator automatically. It starts from the block's default text style and applies the segment attributes. Segment text escapes `\`, `<`, and `>` before generating markup. The standard Text field can also contain your own rich text tags, but a subsequent segment update replaces the field with generated markup. Font assets are loaded from their soft paths when the decorator creates a run; ensure referenced assets are available in packaged builds.
 
-All functions are BlueprintCallable (or BlueprintPure for getters) in the category SimpleRichText. Every function that changes segments also updates Text and the widget.
+## Blueprint and C++ API
 
-Whole content
-Function	Description
-SetSegments(Segments)	Replaces the whole segment array. Takes everything from the structs literally (no inheritance).
-SetCombinedText(Text)	Sets CombinedText, splits it by SegmentSeparator into segments. Existing formats stay.
-SetCombinedTextWithFormats(Text, Formats)	Sets the whole text and the formats at once. Piece N gets Formats[N] (the Text inside the structs is ignored). Extra pieces copy the last format.
-ClearSegments()	Removes all segments.
-Formats only
-Function	Description
-SetFormats(Formats)	Applies formats to the existing segments by order, texts stay. Formats[N] goes to segment N, segments beyond the array get the last format. Empty array does nothing.
-SetSegmentFormat(Index, Format)	Replaces the full format of one segment, its text stays.
-SetSegmentColor(Index, Color)	Sets the color of one segment.
-SetAllSegmentsColor(Color)	Sets the color of every segment.
-SetSegmentSize(Index, Size)	Sets the font size of one segment (0 = default).
-Structure
-Function	Description
-AddSegment(NewSegment)	Adds a segment at the end, returns its index.
-InsertSegment(Index, NewSegment)	Inserts a segment at Index.
-RemoveSegment(Index)	Removes a segment.
-SetSegmentText(Index, Text)	Changes the text of one segment.
+Segment operations are exposed under the **SimpleRichText** Blueprint category. Indices are zero-based; invalid indices are ignored by setters/removal, and `GetSegmentText` returns empty text for an invalid index.
 
-Inheritance rules for AddSegment and InsertSegment:
+| Function | Purpose |
+| --- | --- |
+| `SetSegments` | Replace the segment array and refresh the widget. |
+| `SetCombinedText` | Split combined text using the current separator, retaining formats by position. |
+| `SetCombinedTextWithFormats` | Split text and apply supplied formats in order; the formats' own text fields are ignored. |
+| `SetFormats` | Apply formats by position while preserving segment text; the last supplied format is reused for remaining segments. An empty array does nothing. |
+| `SetSegmentFormat` | Replace one segment's formatting while preserving its text. |
+| `SetSegmentText`, `SetSegmentColor`, `SetSegmentSize` | Change one segment. Size is clamped to at least zero. |
+| `SetAllSegmentsColor` | Change every segment's color. |
+| `AddSegment`, `InsertSegment`, `RemoveSegment`, `ClearSegments` | Add, insert, remove, or clear segments. `AddSegment` returns the new index. |
+| `GetSegmentCount`, `GetSegmentText`, `GetPlainText`, `BuildMarkup` | Inspect the segments, their joined plain text, or the generated markup. |
 
-Text and Color are taken from NewSegment as they are.
-If Font is empty, Font is inherited from the previous segment (the last one for AddSegment, the one before Index for InsertSegment; when inserting at 0, the segment that is pushed to position 1). Typeface is inherited together with the font, but only if it is not set.
-If Size is 0, the size is inherited from the same segment.
-Reading
-Function	Description
-GetSegmentCount()	Number of segments.
-GetSegmentText(Index)	Text of one segment.
-GetPlainText()	All segment texts joined, without any tags.
-BuildMarkup()	The markup generated from the segments.
-SetSegments vs SetFormats
+`AddSegment` and `InsertSegment` use the supplied text and color. If the new segment has no font, it inherits the neighboring font and, if unset, typeface; a size of zero or less inherits the neighboring size. Insertion at index zero uses the first existing segment. `SetSegments` takes the supplied values directly.
 
-Both take an array of FSimpleRichTextSegment, but they do different things:
+For example, given a valid `USimpleRichTextBlock* RichText`:
 
-SetSegments replaces the content completely: texts, formats and the number of segments come from the array.
-SetFormats only changes formats of the segments that already exist: the number of segments and their texts stay, and the Text field inside the structs is ignored.
-Single Field mode and the API
-
-In Single Field mode, functions that change segment texts or the segment count (SetSegments, SetSegmentText, AddSegment, InsertSegment, RemoveSegment, ClearSegments) keep CombinedText in sync automatically by joining the segment texts with SegmentSeparator.
-
-C++ example
-cpp
+```cpp
 #include "SimpleRichTextBlock.h"
 
-void UMyWidget::ShowDamage(USimpleRichTextBlock* Block, int32 Damage)
-{
-	FSimpleRichTextSegment Label;
-	Label.Text = FText::FromString(TEXT("Damage: "));
-	Label.Color = FLinearColor::White;
-	Label.Size = 24;
+FSimpleRichTextSegment Greeting;
+Greeting.Text = FText::FromString(TEXT("Hello, "));
+Greeting.Color = FLinearColor::White;
 
-	FSimpleRichTextSegment Value;
-	Value.Text = FText::AsNumber(Damage);
-	Value.Color = FLinearColor::Red;   // font and size are inherited from the previous segment
+FSimpleRichTextSegment Name;
+Name.Text = FText::FromString(TEXT("world!"));
+Name.Color = FLinearColor(1.0f, 0.3f, 0.4f);
+Name.Size = 28;
 
-	Block->ClearSegments();
-	Block->AddSegment(Label);
-	Block->AddSegment(Value);
-}
+RichText->SetSegments({Greeting, Name});
+```
 
-Single field variant:
+Segment mutations refresh the standard Text property. `ClearSegments()` therefore clears generated text; keep separately authored markup elsewhere if you need to restore it.
 
-cpp
-FSimpleRichTextSegment White; White.Color = FLinearColor::White;
-FSimpleRichTextSegment Red;   Red.Color   = FLinearColor::Red;
 
-Block->SetCombinedTextWithFormats(FText::FromString(TEXT("Damage: |42")), { White, Red });
-Notes and limitations
-Text and segments are not linked in both directions. Segments write into Text, but the markup in Text is not parsed back into segments. If you edit Text by hand, the segments become stale until you edit a segment again, which rewrites Text.
-Calling SetText yourself works as usual. With Always Rebuild From Segments enabled, Text will be overwritten from the segments on the next rebuild.
-Typeface has to be typed in manually.
-Segment color defaults to white and is always written to the tag.
-The Details customization updates Text from the first selected object only when several widgets are selected at once.
-Requirements
-Unreal Engine 5.x (built with 5.7)
-Modules used: Core, CoreUObject, Engine, Slate, SlateCore, UMG (runtime); additionally InputCore, PropertyEditor (editor)
-License
+## License
 
-MIT
-
-Русская версия
-
-English | Русский
-
-SimpleRichText
-
-Плагин для Unreal Engine 5, который добавляет SimpleRichTextBlock — расширение стандартного RichTextBlock.
-
-Он сохраняет всё, что умеет RichTextBlock (наборы стилей, декораторы, перенос строк, SetText и т. д.), и добавляет удобный редактор сегментов в панель Details: вместо ручного ввода тегов вы вводите текст, выбираете цвет (а при необходимости шрифт, typeface и размер) для каждого сегмента, а плагин сам записывает разметку rich text в обычное поле Text.
-
-Разработан и собран под Unreal Engine 5.7.4 Другие версии 5.x не проверялись; некоторые имена функций движка, которые использует плагин (например, URichTextBlock::GetDefaultTextStyle), могут отличаться в разных версиях.
-
-Возможности
-Наследник URichTextBlock, поэтому вся стандартная функциональность продолжает работать.
-Стандартное поле Text остаётся видимым и доступным для редактирования. Сегменты только записывают в него.
-Кастомные строки в Details: [текст][цвет][⚙ шрифт / typeface / размер][+][-] для каждого сегмента.
-Кнопка + добавляет новый сегмент после текущего, который наследует его цвет и форматирование.
-Два режима ввода:
-Per Segment Fields: у каждого сегмента своё поле текста.
-Single Field + Separator: весь текст в одном поле, части разделяются разделителем, а форматы применяются по порядку.
-Для каждого сегмента: цвет, шрифт (UFont / UFontFace), имя typeface и размер шрифта.
-Набор Blueprint / C++ функций для создания и изменения сегментов во время выполнения.
-Опциональный режим, в котором Text всегда пересобирается из сегментов.
-Установка
-Скопируйте папку плагина в проект:
-YourProject/Plugins/SimpleRichText/
-Перегенерируйте файлы проекта и соберите проект.
-Если плагин ещё не включён, включите его в Edit → Plugins → UI → Simple Rich Text и перезапустите редактор.
-Структура плагина
-SimpleRichText/
-  SimpleRichText.uplugin
-  Source/
-    SimpleRichText/                 (Runtime-модуль)
-      SimpleRichText.Build.cs
-      Public/
-        SimpleRichTextModule.h
-        SimpleRichTextBlock.h
-        SimpleRichTextDecorator.h
-      Private/
-        SimpleRichTextModule.cpp
-        SimpleRichTextBlock.cpp
-        SimpleRichTextDecorator.cpp
-    SimpleRichTextEditor/           (Editor-модуль)
-      SimpleRichTextEditor.Build.cs
-      Public/
-        SimpleRichTextEditorModule.h
-        SimpleRichTextBlockCustomization.h
-      Private/
-        SimpleRichTextEditorModule.cpp
-        SimpleRichTextBlockCustomization.cpp
-SimpleRichText (Runtime): USimpleRichTextBlock, структура сегмента и декоратор текста, понимающий генерируемый тег.
-SimpleRichTextEditor (Editor): IDetailCustomization, который строит строки сегментов.
-Быстрый старт
-Откройте Widget Blueprint.
-В палитре, категория Simple, перетащите Simple Rich Text Block в иерархию.
-В Details → Content нажмите Add segment.
-Введите текст, выберите цвет. Нажмите + в строке, чтобы добавить следующий кусок текста с тем же цветом, и поменяйте цвет там.
-Сгенерированная разметка появится в стандартном поле Text, превью обновится.
-Панель Details
-
-Все элементы находятся в категории Content.
-
-Свойство	Описание
-Text	Стандартное поле текста RichTextBlock. Полностью доступно для ручного ввода.
-Text Segments	Редактор сегментов (строки описаны ниже).
-Always Rebuild From Segments	Выключено (по умолчанию): Text записывается только когда вы редактируете сегменты. Включено: Text пересобирается из сегментов при загрузке и пересоздании виджета, поэтому ручные изменения Text будут перезаписаны.
-Input Mode	Per Segment Fields или Single Field + Separator.
-Combined Text	(только режим Single Field) Весь текст целиком.
-Segment Separator	(только режим Single Field) Строка, разделяющая части в Combined Text. По умолчанию `
-Строка сегмента
-[ поле текста ] [ цвет ] [ ⚙ ] [ + ] [ - ]
-поле текста: текст этого сегмента (многострочный).
-цвет: цвет этого сегмента. Новые сегменты, созданные кнопкой +, копируют цвет сегмента, от которого были созданы.
-⚙: всплывающее окно с
-Font: ассет UFont или UFontFace. Пусто = шрифт блока по умолчанию.
-Typeface: имя typeface внутри шрифта (например, Bold, Italic). Сейчас вводится вручную. Пусто = по умолчанию.
-Size: размер шрифта. 0 = размер по умолчанию.
-+: добавить новый сегмент после этого (наследует цвет и форматирование, текст пустой).
--: удалить этот сегмент.
-Режимы ввода
-Per Segment Fields (по умолчанию)
-
-У каждого сегмента своё поле текста. Редактирование любого сегмента перезаписывает Text сгенерированной разметкой.
-
-Чтобы не стереть вручную написанный Text, запись не выполняется, пока сгенерированная разметка пуста (например, сразу после добавления первого, ещё пустого сегмента).
-
-Single Field + Separator
-
-Введите весь текст в Combined Text и поставьте разделитель между частями, которые должны быть оформлены по-разному:
-
-Привет |красивый |мир|!
-
-С разделителем | это разбивается на четыре части. Часть N получает формат (цвет, шрифт, typeface, размер) сегмента N. Строки сегментов при этом показывают только цвет и окно ⚙ рядом с превью части, доступным только для чтения (1: Привет, 2: красивый, ...).
-
-Правила:
-
-Количество сегментов всегда равно количеству частей.
-Если частей больше, чем сегментов, новые сегменты копируют формат последнего.
-Если частей меньше, чем сегментов, лишние сегменты в конце (вместе с их форматами) удаляются.
-Вставка разделителя в середину сдвигает форматы на одну часть, потому что форматы сопоставляются строго по порядку.
-При переключении существующего блока в этот режим текущие сегменты склеиваются через разделитель в Combined Text.
-После изменения Combined Text, разделителя или режима панель Details перестраивается.
-
-Если в ваших текстах может встречаться разделитель, выберите более редкий (например, || или ¦). Текст сегмента, содержащий разделитель, при следующем разбиении будет разрезан на два.
-
-Генерируемая разметка
-
-Сегменты превращаются в один тег на сегмент. Закрывающий тег стандартный: </>.
-
-<seg c="FF0000FF" f="/Game/Fonts/Roboto.Roboto" tf="Bold" s="32">Привет</>
-Атрибут	Значение
-c	Цвет в hex-формате RRGGBBAA (sRGB). Присутствует всегда.
-f	Soft object path ассета шрифта. Только если шрифт задан.
-tf	Имя typeface. Только если задано.
-s	Размер шрифта. Только если больше 0.
-
-Примечания:
-
-Сегменты с пустым текстом пропускаются.
-Символы <, > и \ внутри текста сегмента экранируются обратной косой чертой.
-Тег обрабатывается FSimpleRichTextDecorator, который автоматически добавляется в блок. Отталкиваясь от стиля текста блока по умолчанию, он переопределяет цвет, шрифт, typeface и размер.
-Так как это обычная разметка rich text, в поле Text можно смешивать теги <seg> с вашими собственными тегами из набора стилей.
-Структура сегмента: FSimpleRichTextSegment
-Поле	Тип	Описание
-Text	FText	Текст сегмента.
-Color	FLinearColor	Цвет. По умолчанию белый.
-Font	TSoftObjectPtr<UObject>	Ассет UFont / UFontFace. Пусто = по умолчанию.
-Typeface	FName	Typeface внутри шрифта. None = по умолчанию.
-Size	int32	Размер шрифта. 0 = по умолчанию.
-Blueprint / C++ API
-
-Все функции — BlueprintCallable (или BlueprintPure для геттеров) в категории SimpleRichText. Каждая функция, меняющая сегменты, также обновляет Text и виджет.
-
-Всё содержимое
-Функция	Описание
-SetSegments(Segments)	Заменяет весь массив сегментов. Берёт всё из структур буквально (без наследования).
-SetCombinedText(Text)	Устанавливает CombinedText и разбивает его по SegmentSeparator на сегменты. Существующие форматы сохраняются.
-SetCombinedTextWithFormats(Text, Formats)	Задаёт весь текст и форматы за один вызов. Часть N получает Formats[N] (поле Text внутри структур игнорируется). Лишние части копируют последний формат.
-ClearSegments()	Удаляет все сегменты.
-Только форматы
-Функция	Описание
-SetFormats(Formats)	Применяет форматы к существующим сегментам по порядку, тексты остаются. Formats[N] получает сегмент N, сегменты за пределами массива получают последний формат. Пустой массив ничего не делает.
-SetSegmentFormat(Index, Format)	Заменяет весь формат одного сегмента, его текст остаётся.
-SetSegmentColor(Index, Color)	Задаёт цвет одного сегмента.
-SetAllSegmentsColor(Color)	Задаёт цвет всех сегментов.
-SetSegmentSize(Index, Size)	Задаёт размер шрифта одного сегмента (0 = по умолчанию).
-Структура
-Функция	Описание
-AddSegment(NewSegment)	Добавляет сегмент в конец, возвращает его индекс.
-InsertSegment(Index, NewSegment)	Вставляет сегмент на позицию Index.
-RemoveSegment(Index)	Удаляет сегмент.
-SetSegmentText(Index, Text)	Меняет текст одного сегмента.
-
-Правила наследования для AddSegment и InsertSegment:
-
-Text и Color берутся из NewSegment как есть.
-Если Font пустой, он наследуется от предыдущего сегмента (для AddSegment — последнего, для InsertSegment — стоящего перед Index; при вставке в позицию 0 — от сегмента, который сдвигается на позицию 1). Typeface наследуется вместе со шрифтом, но только если он не задан.
-Если Size равен 0, размер наследуется от того же сегмента.
-Чтение
-Функция	Описание
-GetSegmentCount()	Количество сегментов.
-GetSegmentText(Index)	Текст одного сегмента.
-GetPlainText()	Тексты всех сегментов, склеенные без тегов.
-BuildMarkup()	Разметка, сгенерированная из сегментов.
-SetSegments и SetFormats
-
-Обе принимают массив FSimpleRichTextSegment, но делают разное:
-
-SetSegments полностью заменяет содержимое: тексты, форматы и количество сегментов берутся из массива.
-SetFormats меняет только форматы уже существующих сегментов: количество сегментов и их тексты остаются, а поле Text внутри структур игнорируется.
-Режим Single Field и API
-
-В режиме Single Field функции, меняющие тексты сегментов или их количество (SetSegments, SetSegmentText, AddSegment, InsertSegment, RemoveSegment, ClearSegments), автоматически поддерживают CombinedText в актуальном состоянии, склеивая тексты сегментов через SegmentSeparator.
-
-Пример на C++
-cpp
-#include "SimpleRichTextBlock.h"
-
-void UMyWidget::ShowDamage(USimpleRichTextBlock* Block, int32 Damage)
-{
-	FSimpleRichTextSegment Label;
-	Label.Text = FText::FromString(TEXT("Урон: "));
-	Label.Color = FLinearColor::White;
-	Label.Size = 24;
-
-	FSimpleRichTextSegment Value;
-	Value.Text = FText::AsNumber(Damage);
-	Value.Color = FLinearColor::Red;   // шрифт и размер наследуются от предыдущего сегмента
-
-	Block->ClearSegments();
-	Block->AddSegment(Label);
-	Block->AddSegment(Value);
-}
-
-Вариант с одним полем:
-
-cpp
-FSimpleRichTextSegment White; White.Color = FLinearColor::White;
-FSimpleRichTextSegment Red;   Red.Color   = FLinearColor::Red;
-
-Block->SetCombinedTextWithFormats(FText::FromString(TEXT("Урон: |42")), { White, Red });
-Примечания и ограничения
-Текст и сегменты не связаны в обе стороны. Сегменты записывают в Text, но разметка в Text не разбирается обратно в сегменты. Если отредактировать Text вручную, сегменты устареют, пока вы снова не отредактируете сегмент, что перезапишет Text.
-Вызов SetText напрямую работает как обычно. При включённом Always Rebuild From Segments Text будет перезаписан из сегментов при следующей пересборке.
-Typeface нужно вводить вручную.
-Цвет сегмента по умолчанию белый и всегда записывается в тег.
-Если в редакторе выбрано сразу несколько виджетов, Details-кастомизация обновляет Text только по первому выбранному объекту.
-Требования
-Unreal Engine 5.x (собрано на 5.7)
-Используемые модули: Core, CoreUObject, Engine, Slate, SlateCore, UMG (runtime); дополнительно InputCore, PropertyEditor (editor)
-Лицензия
-
-MIT
+Licensed under the [MIT License](LICENSE). Copyright @ 2026 AlisaNyaXD. See the license file for the full terms.
