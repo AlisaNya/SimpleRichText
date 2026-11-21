@@ -9,7 +9,6 @@
   <p>
     <img src="https://img.shields.io/badge/Unreal%20Engine-5.7-0E1128?logo=unrealengine&amp;logoColor=white" alt="Developed with Unreal Engine 5.7">
     <img src="https://img.shields.io/badge/Blueprint-ready-2874A6" alt="Blueprint ready">
-    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
   </p>
 </div>
 
