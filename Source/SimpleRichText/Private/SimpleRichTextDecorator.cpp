@@ -1,4 +1,4 @@
-﻿// Copyright UnrealEssence. All Rights Reserved.
+﻿// Copyright 2026 UnrealEssence. All Rights Reserved.
 
 #include "SimpleRichTextDecorator.h"
 #include "SimpleRichTextBlock.h"

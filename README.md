@@ -130,8 +130,3 @@ RichText->SetSegments({Greeting, Name});
 ```
 
 Segment mutations refresh the standard Text property. `ClearSegments()` therefore clears generated text; keep separately authored markup elsewhere if you need to restore it.
-
-
-## License
-
-Licensed under the [MIT License](LICENSE). Copyright @ 2026 AlisaNyaXD. See the license file for the full terms.
